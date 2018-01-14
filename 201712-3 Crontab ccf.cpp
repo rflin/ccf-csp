@@ -13,7 +13,7 @@ void buildMonAndWekMap()
 	for(int i=0;i<=6;++i) mWek[vWek[i]]=i;
 }
 
-string to_string(int n)//c++11 surport
+string to_string_x(int n)//c++11 surport
 {
 	if(n==0) return "0";
 	string ans;
@@ -25,7 +25,7 @@ string to_string(int n)//c++11 surport
 	reverse(ans.begin(),ans.end());
 	return ans;
 }
-int stoi(const string &str)//c++11 surport
+int stoi_x(const string &str)//c++11 surport
 {
 	int len=str.size();
 	int ans=0;
@@ -52,8 +52,8 @@ vector<string> splitStringAndbuildVector(string &str,int TAG)//TAG=0(other),1(mo
 		size_t fdx=x.find("-");
 		if(fdx==string::npos)//非连续值 
 		{
-			if(TAG==1&&isalpha(x[0])) x=to_string(mMon[x]);//month
-			if(TAG==2&&isalpha(x[0])) x=to_string(mWek[x]);//day of week;
+			if(TAG==1&&isalpha(x[0])) x=to_string_x(mMon[x]);//month
+			if(TAG==2&&isalpha(x[0])) x=to_string_x(mWek[x]);//day of week;
 			if(x.size()==1) x="0"+x;
 			vret.push_back(x);
 		}
@@ -61,20 +61,20 @@ vector<string> splitStringAndbuildVector(string &str,int TAG)//TAG=0(other),1(mo
 		{
 			string L=x.substr(0,fdx),R=x.substr(fdx+1,x.size()-fdx-1);
 			int left,right;
-			if(TAG==0) left=stoi(L),right=stoi(R);
+			if(TAG==0) left=stoi_x(L),right=stoi_x(R);
 			else if(TAG==1)//month
 			{
-				left=(isalpha(L[0]))?mMon[L]:stoi(L);
-				right=(isalpha(R[0]))?mMon[R]:stoi(R);
+				left=(isalpha(L[0]))?mMon[L]:stoi_x(L);
+				right=(isalpha(R[0]))?mMon[R]:stoi_x(R);
 			}
 			else if(TAG==2)//day of week
 			{
-				left=(isalpha(L[0]))?mWek[L]:stoi(L);
-				right=(isalpha(R[0]))?mWek[R]:stoi(R);
+				left=(isalpha(L[0]))?mWek[L]:stoi_x(L);
+				right=(isalpha(R[0]))?mWek[R]:stoi_x(R);
 			}
 			while(left<=right)
 			{
-				string num=to_string(left);
+				string num=to_string_x(left);
 				if(num.size()==1)num="0"+num;
 				vret.push_back(num);
 				++left;
@@ -97,7 +97,7 @@ bool isleapyear(int y)
 }
 string getWeekday(string year,string month,string day)
 {
-	int y=stoi(year),m=stoi(month),d=stoi(day);
+	int y=stoi_x(year),m=stoi_x(month),d=stoi_x(day);
 	if(isleapyear(y)) mtharray[2]=29;
 	else mtharray[2]=28;
 	int by=1970,countday=0;
@@ -108,18 +108,18 @@ string getWeekday(string year,string month,string day)
 	}
 	for(int i=1;i<m;++i) countday+=mtharray[i];
 	countday+=d-1;
-	return "0"+to_string((4+countday%7)%7);
+	return "0"+to_string_x((4+countday%7)%7);
 }
 int main()
 {
 	int n;
 	string st,et;
 	buildMonAndWekMap();
-	freopen("2.txt","r",stdin);
+	//freopen("2.txt","r",stdin);
 	cin>>n>>st>>et;
 	string syy=st.substr(0,4),smm=st.substr(4,2),sdd=st.substr(6,2),sHH=st.substr(8,2),sMM=st.substr(10,2);
 	string eyy=et.substr(0,4),emm=et.substr(4,2),edd=et.substr(6,2),eHH=et.substr(8,2),eMM=et.substr(10,2);
-	int syInt=stoi(syy),eyInt=stoi(eyy);
+	int syInt=stoi_x(syy),eyInt=stoi_x(eyy);
 	while(n--)
 	{
 		vector<string> vmts,vhur,vdfm,vmth,vdfw;
@@ -144,7 +144,7 @@ int main()
 		{
 			if(isleapyear(curyear)) mtharray[2]=29;//leapyear的2月份应该是29天 
 			else mtharray[2]=28;
-			string year=to_string(curyear);//年份 
+			string year=to_string_x(curyear);//年份 
 			for(size_t mi=0;mi<vmth.size();mi++)//month
 			{
 				string curm=vmth[mi];//当前月份 
@@ -152,7 +152,7 @@ int main()
 				{
 					string curd=vdfm[di];//当前日期 
 					string wd=getWeekday(year,curm,curd);//该年，该月，该日是星期几 
-					if(wekexist.count(wd)==0||stoi(curd)>mtharray[stoi(curm)])continue;//命令行中不包含该星期或者当前天数超过当前月份的应有天数时 
+					if(wekexist.count(wd)==0||stoi_x(curd)>mtharray[stoi_x(curm)])continue;//命令行中不包含该星期或者当前天数超过当前月份的应有天数时 
 					for(size_t Hi=0;Hi<vhur.size();++Hi)//hour
 					{
 						for(size_t Mi=0;Mi<vmts.size();++Mi)//minutes
