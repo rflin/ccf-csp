@@ -12,7 +12,6 @@ void buildMonAndWekMap()
 	for(int i=1;i<=12;++i) mMon[vMon[i]]=i;
 	for(int i=0;i<=6;++i) mWek[vWek[i]]=i;
 }
-
 string to_string_x(int n)//c++11 surport
 {
 	if(n==0) return "0";
@@ -83,13 +82,6 @@ vector<string> splitStringAndbuildVector(string &str,int TAG)//TAG=0(other),1(mo
 		found=str.find(",");
 	}
 	return vret;
-}
-void d(vector<string> &v)
-{
-	int n=v.size();
-	for(int i=0;i<n;++i)
-	cout<<v[i]<<" ";
-	cout<<endl;
 }
 bool isleapyear(int y)
 {
