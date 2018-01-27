@@ -1,77 +1,77 @@
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long llt;
-const llt Inf=0x7fffffffffffffff;
+const llt inf=0x7fffffffffffffff;
 llt sA[512][512],bA[512][512];
 llt n,m;
 
-llt sqe(llt x)//返回平方
-{
-	return x*x;
-}
+llt sqe(llt x){return x*x;}//返回平方
 llt dijkstra()
 {
-	bool visit[512]={0};
-	vector<llt> sr(sA[0],sA[0]+n),br(bA[0],bA[0]+n),presr(n,Inf);
+	bool visitsr[512]={0},visitbr[512]={0};
+	vector<llt> sr(sA[0],sA[0]+n),br(bA[0],bA[0]+n),presr(n,inf);
 	for(llt i=0;i<n;++i)
 	{
-		if(sr[i]<Inf)
+		if(sr[i]<inf)
 		{
 			presr[i]=sr[i];
 			sr[i]*=sr[i];
 		}
 	}
-	visit[0]=1;
+	visitsr[0]=visitbr[0]=1;
 	while(true)
 	{
-		llt minval=Inf,u=-1;
-		for(llt i=0;i<n;++i)
+		llt minval=inf,u=-1,flag=0;
+		for(llt i=0;i<n;++i)//找到一条最短路径，并且用flag标记是大路还是小路
 		{
-			if(!visit[i]&&minval>min(sr[i],br[i]))
+			if(!visitbr[i]&&minval>br[i])
 			{
-				minval=min(sr[i],br[i]);
-				u=i;
+				minval=br[u=i];
+				flag=0;//大路
+			}
+			if(!visitsr[i]&&minval>sr[i])
+			{
+				minval=sr[u=i];
+				flag=1;//小路
 			}
 		}
 		if(u==-1)break;
-		visit[u]=1;
+		if(flag==1) visitsr[u]=1;
+		else visitbr[u]=1;
 		for(llt w=0;w<n;++w)
 		{
-			if(visit[w]==0&&(sA[u][w]<Inf||bA[u][w]<Inf))
+			if(!visitsr[w]&&sA[u][w]<inf)//从u到w存在一条小路
 			{
-				if(sA[u][w]<Inf)//新选择的边是小路
+				if(flag==1)//u前驱是小路
 				{
-					if(sr[u]<Inf)//选取的u节点前面存在小路
+					llt len=sr[u]-sqe(presr[u])+sqe(presr[u]+sA[u][w]);
+					if(sr[w]>len||(sr[w]==len&&presr[w]>presr[u]+sA[u][w]))
 					{
-						llt lena=sr[u]-sqe(presr[u])+sqe(presr[u]+sA[u][w]);//通过u节点得到新的路径，u节点前面是小路，新边是小路
-						if(sr[w]>lena||(sr[w]==lena&&presr[w]>presr[u]+sA[u][w]))
-						{
-							sr[w]=lena;
-							presr[w]=presr[u]+sA[u][w];//更新w节点前面连续小路
-						}
-					}
-					if(br[u]<Inf)//选取的u节点前面存在大路
-					{
-						llt lenb=br[u]+sqe(sA[u][w]);//通过u节点得到新的路径，u节点前面是大路，新边是小路
-						if(sr[w]>lenb||(sr[w]==lenb&&presr[w]>sA[u][w]))
-						{
-							sr[w]=lenb;
-							presr[w]=sA[u][w];//更新w节点前面连续小路
-						}
+						sr[w]=len;
+						presr[w]=presr[u]+sA[u][w];
 					}
 				}
-				if(bA[u][w]<Inf)//新选择的边是大路
+				else//u前驱是大路
 				{
-					if(sr[u]<Inf)//选取的u节点前面存在小路
+					llt len=br[u]+sqe(sA[u][w]);
+					if(sr[w]>len||(sr[w]==len&&presr[w]>sA[u][w]))
 					{
-						llt lena=sr[u]+bA[u][w];//通过u节点得到新的路径，u节点前面是小路，新边是大路
-						br[w]=min(lena,br[w]);
+						sr[w]=len;
+						presr[w]=sA[u][w];
 					}
-					if(br[u]<Inf)//选取的u节点前面存在大路
-					{
-						llt lenb=br[u]+bA[u][w];//通过u节点得到新的路径，u节点前面是大路，新边是大路
-						br[w]=min(lenb,br[w]);
-					}
+				}
+			}
+			if(!visitbr[w]&&bA[u][w]<inf)//从u到w存在一条大路
+			{
+				if(flag==1)//u前驱是小路
+				{
+					llt len=sr[u]+bA[u][w];
+					br[w]=min(len,br[w]);
+				}
+				else//u前驱是大路
+				{
+					llt len=br[u]+bA[u][w];
+					br[w]=min(len,br[w]);
 				}
 			}
 		}
@@ -85,9 +85,8 @@ int main()
     {
         for(llt j=0;j<n;++j)
         {
-        	llt val=(i==j)?0:Inf;
-        	sA[i][j]=sA[j][i]=val;
-        	bA[i][j]=bA[j][i]=val;
+        	sA[i][j]=sA[j][i]=inf;
+        	bA[i][j]=bA[j][i]=inf;
         }
     }
     for(llt i=0;i<m;++i)
