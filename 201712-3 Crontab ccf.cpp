@@ -147,10 +147,15 @@ int main()
     }
     for(map<string,vector<string> >::iterator it=mrt.begin();it!=mrt.end();++it)
     {
-        //cout<<it->first<<" "<<it->second<<endl;
+        map<string,int> isprt;
         for(size_t i=0;i<it->second.size();++i)
         {
-            cout<<it->first<<" "<<it->second[i]<<endl;
+            string dis=it->first+" "+it->second[i];
+            if(isprt.count(dis)==0)
+            {
+                cout<<dis<<endl;
+                isprt[dis]=1;
+            }
         }
     }
     return 0;
