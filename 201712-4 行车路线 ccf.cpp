@@ -1,3 +1,6 @@
+/*
+该代码存在一些问题，对于评论区的一些测试用例不能通过，具体查看http://blog.csdn.net/gl486546/article/details/79060030
+*/
 #include <bits/stdc++.h>
 using namespace std;
 typedef long long llt;
