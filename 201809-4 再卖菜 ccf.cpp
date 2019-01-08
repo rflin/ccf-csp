@@ -13,7 +13,7 @@ void dfs(int i, int cur, int pre){
 	}
 	int next = 3*day2[i] - pre - cur;//对第i天，如果该天cur，以及昨天pre确定，那么下一天有3种情况
 	for(int k = 0; k < 3; ++k){//0, 1, 2
-		if(next + k > 0 && !isfind){//注意next必须为正整数
+		if(next + k > 0 && !isfind){//注意next + k必须为正整数
 			dfs(i + 1, next + k, cur);
 		}
 	}
